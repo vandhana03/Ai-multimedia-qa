@@ -33,30 +33,38 @@ function ChatBox() {
         }
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        askQuestion()
+    }
+
     return (
         <div className="card">
 
             <h2>AI Chatbot</h2>
+            <p className="muted-text">Ask focused questions about your latest uploaded content.</p>
 
-            <textarea
-                rows="4"
-                placeholder="Ask question..."
-                value={question}
-                onChange={(e)=>setQuestion(e.target.value)}
-            />
+            <form onSubmit={handleSubmit}>
+                <textarea
+                    rows="4"
+                    placeholder="Ask question..."
+                    value={question}
+                    onChange={(e)=>setQuestion(e.target.value)}
+                />
 
-            <button onClick={askQuestion} disabled={loading}>
-                {loading ? 'Asking...' : 'Ask'}
-            </button>
+                <button type="submit" disabled={loading || !question.trim()}>
+                    {loading ? 'Asking...' : 'Ask'}
+                </button>
+            </form>
 
             {
                 answer && (
-                    <div>
+                    <div className="response-box">
 
                         <h3>Answer</h3>
 
                         <p>{answer}</p>
-                        {source ? <p><b>Source:</b> {source}</p> : null}
+                        {source ? <p className="muted-text"><b>Source:</b> {source}</p> : null}
 
                     </div>
                 )

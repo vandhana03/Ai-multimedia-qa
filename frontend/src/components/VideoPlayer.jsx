@@ -16,10 +16,12 @@ function VideoPlayer({ videoUrl, jumpToSeconds = null }) {
         <div className="card">
 
             <h2>Video Player</h2>
+            <p className="muted-text">Use timestamps to jump to relevant moments instantly.</p>
 
             {
                 videoUrl ? (
                     <video
+                        className="video-frame"
                         ref={videoRef}
                         key={videoUrl}
                         width="100%"
@@ -36,13 +38,9 @@ function VideoPlayer({ videoUrl, jumpToSeconds = null }) {
                         />
                     </video>
                 ) : (
-                    <p>Upload a video file to preview it here.</p>
+                    <p className="muted-text">Upload a video file to preview it here.</p>
                 )
             }
-
-            <button onClick={()=>jumpToTime(30)} disabled={!videoUrl}>
-                Play From 30s
-            </button>
 
         </div>
     )

@@ -6,15 +6,19 @@ function UploadForm({ onUploadSuccess }) {
     const [title,setTitle] = useState('')
     const [file,setFile] = useState(null)
     const [uploading, setUploading] = useState(false)
+    const [message, setMessage] = useState('')
+    const [messageType, setMessageType] = useState('')
 
     const handleUpload = async () => {
         if (!title.trim()) {
-            alert('Please enter a title')
+            setMessage('Please enter a title.')
+            setMessageType('error')
             return
         }
 
         if (!file) {
-            alert('Please choose a file')
+            setMessage('Please choose a file.')
+            setMessageType('error')
             return
         }
 
@@ -25,13 +29,15 @@ function UploadForm({ onUploadSuccess }) {
 
         try{
             setUploading(true)
+            setMessage('')
 
             const response = await axios.post(
                 'http://127.0.0.1:8000/api/upload/',
                 formData
             )
 
-            alert('Uploaded Successfully')
+            setMessage('Upload completed successfully.')
+            setMessageType('success')
             if (onUploadSuccess) {
                 onUploadSuccess(response.data)
             }
@@ -39,7 +45,8 @@ function UploadForm({ onUploadSuccess }) {
         }catch(error){
             console.log(error)
             const message = error?.response?.data?.error || 'Upload Failed'
-            alert(message)
+            setMessage(message)
+            setMessageType('error')
         } finally {
             setUploading(false)
         }
@@ -49,6 +56,7 @@ function UploadForm({ onUploadSuccess }) {
         <div className="card">
 
             <h2>Upload File</h2>
+            <p className="muted-text">Supported formats: PDF, MP3, WAV, M4A, MP4, MOV, WEBM, MKV.</p>
 
             <input
                 type="text"
@@ -63,9 +71,12 @@ function UploadForm({ onUploadSuccess }) {
                 onChange={(e)=>setFile(e.target.files[0])}
             />
 
-            <button onClick={handleUpload} disabled={uploading}>
+            {file ? <p className="muted-text">Selected: {file.name}</p> : null}
+
+            <button onClick={handleUpload} disabled={uploading || !title.trim() || !file}>
                 {uploading ? 'Uploading...' : 'Upload'}
             </button>
+            {message ? <p className={`status-text ${messageType}`}>{message}</p> : null}
 
         </div>
     )

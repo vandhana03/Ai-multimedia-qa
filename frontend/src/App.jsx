@@ -8,7 +8,7 @@ import VideoPlayer from './components/VideoPlayer'
 
 function App() {
     const [uploadedVideoUrl, setUploadedVideoUrl] = useState('')
-    const [summary, setSummary] = useState('Click "Generate Summary" after upload.')
+    const [summary, setSummary] = useState('Generate a concise summary after uploading content.')
     const [timestamps, setTimestamps] = useState([])
     const [summaryLoading, setSummaryLoading] = useState(false)
     const [timestampLoading, setTimestampLoading] = useState(false)
@@ -45,43 +45,52 @@ function App() {
     }
 
     return (
-        <div className="container">
+        <div className="app-shell">
+            <div className="container">
+                <header className="app-header">
+                    <h1>AI Multimedia Q&A</h1>
+                    <p>Upload media, ask questions, generate summaries, and jump to key moments.</p>
+                </header>
 
-            <h1>
-                AI Multimedia Q&A App
-            </h1>
+                <section className="layout-grid">
+                    <div className="layout-main">
+                        <UploadForm
+                            onUploadSuccess={(data) => {
+                                setSummary('Generate a concise summary after uploading content.')
+                                setTimestamps([])
+                                setJumpToSeconds(null)
+                                if (data.file_type === 'video') {
+                                    setUploadedVideoUrl(data.file_url)
+                                } else {
+                                    setUploadedVideoUrl('')
+                                }
+                            }}
+                        />
 
-            <UploadForm
-                onUploadSuccess={(data) => {
-                    setSummary('Click "Generate Summary" after upload.')
-                    setTimestamps([])
-                    setJumpToSeconds(null)
-                    if (data.file_type === 'video') {
-                        setUploadedVideoUrl(data.file_url)
-                    }
-                }}
-            />
+                        <ChatBox />
+                    </div>
 
-            <ChatBox />
+                    <div className="layout-side">
+                        <SummaryBox
+                            summary={summary}
+                            loading={summaryLoading}
+                            onGenerateSummary={handleGenerateSummary}
+                        />
 
-            <SummaryBox
-                summary={summary}
-                loading={summaryLoading}
-                onGenerateSummary={handleGenerateSummary}
-            />
+                        <TimestampBox
+                            timestamps={timestamps}
+                            loading={timestampLoading}
+                            onFindTimestamps={handleFindTimestamps}
+                            onJumpToTimestamp={(seconds) => setJumpToSeconds(seconds)}
+                        />
+                    </div>
+                </section>
 
-            <TimestampBox
-                timestamps={timestamps}
-                loading={timestampLoading}
-                onFindTimestamps={handleFindTimestamps}
-                onJumpToTimestamp={(seconds) => setJumpToSeconds(seconds)}
-            />
-
-            <VideoPlayer
-                videoUrl={uploadedVideoUrl}
-                jumpToSeconds={jumpToSeconds}
-            />
-
+                <VideoPlayer
+                    videoUrl={uploadedVideoUrl}
+                    jumpToSeconds={jumpToSeconds}
+                />
+            </div>
         </div>
     )
 }

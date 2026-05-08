@@ -9,7 +9,7 @@ function SummaryBox({ summary, onGenerateSummary, loading }) {
                 {loading ? 'Generating...' : 'Generate Summary'}
             </button>
 
-            <p>{summary}</p>
+            <p className="content-text">{summary}</p>
 
         </div>
     )

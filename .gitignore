@@ -32,6 +32,9 @@ venv/
 env/
 ENV/
 
+.faiss
+.pkl
+
 # Secrets / environment files
 .env
 .env.*
