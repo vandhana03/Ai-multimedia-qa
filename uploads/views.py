@@ -6,7 +6,11 @@ from rest_framework import status
 from rest_framework.parsers import FormParser, MultiPartParser
 from .models import UploadedFile
 from .utils.pdf_parser import extract_pdf_text
-from .utils.transcriber import transcribe_file
+from .utils.transcriber import (
+    TranscriptionProcessingError,
+    TranscriptionSetupError,
+    transcribe_file,
+)
 from chatbot.utils.vector_store import create_vector_store
 # from rest_framework.permissions import IsAuthenticated
 
@@ -59,8 +63,21 @@ class UploadFileView(APIView):
             text = extract_pdf_text(path)
 
         else:
-            result = transcribe_file(path)
-            text = result['text']
+            try:
+                result = transcribe_file(path)
+            except TranscriptionSetupError as exc:
+                uploaded.delete()
+                return Response(
+                    {"error": str(exc)},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+            except TranscriptionProcessingError as exc:
+                uploaded.delete()
+                return Response(
+                    {"error": str(exc)},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            text = result.get("timestamped_text") or result.get("text", "")
 
         uploaded.extracted_text = text
         uploaded.save()

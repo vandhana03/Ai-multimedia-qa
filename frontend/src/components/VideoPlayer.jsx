@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 
-function VideoPlayer({ videoUrl }) {
+function VideoPlayer({ videoUrl, jumpToSeconds = null }) {
 
     const videoRef = useRef()
 
@@ -21,8 +21,14 @@ function VideoPlayer({ videoUrl }) {
                 videoUrl ? (
                     <video
                         ref={videoRef}
+                        key={videoUrl}
                         width="100%"
                         controls
+                        onLoadedMetadata={() => {
+                            if (typeof jumpToSeconds === 'number') {
+                                jumpToTime(jumpToSeconds)
+                            }
+                        }}
                     >
                         <source
                             src={videoUrl}
@@ -34,7 +40,7 @@ function VideoPlayer({ videoUrl }) {
                 )
             }
 
-            <button onClick={()=>jumpToTime(30)}>
+            <button onClick={()=>jumpToTime(30)} disabled={!videoUrl}>
                 Play From 30s
             </button>
 
