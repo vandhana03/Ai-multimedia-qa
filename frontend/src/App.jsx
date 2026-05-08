@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import axios from 'axios'
 import UploadForm from './components/uploadform'
 import ChatBox from './components/chatbox'
@@ -12,7 +12,9 @@ function App() {
     const [timestamps, setTimestamps] = useState([])
     const [summaryLoading, setSummaryLoading] = useState(false)
     const [timestampLoading, setTimestampLoading] = useState(false)
-    const [jumpToSeconds, setJumpToSeconds] = useState(null)
+
+    // Ref to call seekTo() directly on VideoPlayer — no state, no re-render
+    const videoPlayerRef = useRef()
 
     const handleGenerateSummary = async () => {
         try {
@@ -58,7 +60,6 @@ function App() {
                             onUploadSuccess={(data) => {
                                 setSummary('Generate a concise summary after uploading content.')
                                 setTimestamps([])
-                                setJumpToSeconds(null)
                                 if (data.file_type === 'video') {
                                     setUploadedVideoUrl(data.file_url)
                                 } else {
@@ -81,14 +82,19 @@ function App() {
                             timestamps={timestamps}
                             loading={timestampLoading}
                             onFindTimestamps={handleFindTimestamps}
-                            onJumpToTimestamp={(seconds) => setJumpToSeconds(seconds)}
+                            onJumpToTimestamp={(seconds) => {
+                                const video = videoPlayerRef.current
+                                if (!video) return
+                                video.currentTime = Number(seconds)
+                                video.play().catch(() => {})
+                            }}
                         />
                     </div>
                 </section>
 
                 <VideoPlayer
+                    ref={videoPlayerRef}
                     videoUrl={uploadedVideoUrl}
-                    jumpToSeconds={jumpToSeconds}
                 />
             </div>
         </div>

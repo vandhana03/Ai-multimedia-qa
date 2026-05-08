@@ -37,7 +37,7 @@ function TimestampBox({ timestamps, onFindTimestamps, onJumpToTimestamp, loading
 
                         <p className="timestamp-label">
                             <span>{item.topic}</span>
-                            <strong>{item.time}</strong>
+                            <strong>{item.time} ({item.seconds}s)</strong>
                         </p>
                         <button
                             onClick={()=>onJumpToTimestamp(item.seconds)}
