@@ -1,0 +1,69 @@
+# ------------------------------
+# Python / Django
+# ------------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.log
+.python-version
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+dist/
+build/
+*.egg-info/
+pip-wheel-metadata/
+
+# Django local/runtime files
+db.sqlite3
+db.sqlite3-journal
+local_settings.py
+media/
+staticfiles/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Secrets / environment files
+.env
+.env.*
+!.env.example
+
+# ------------------------------
+# Node / React frontend
+# ------------------------------
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/.cache/
+frontend/.parcel-cache/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ------------------------------
+# Tooling / IDE / OS
+# ------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini
