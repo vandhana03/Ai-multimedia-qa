@@ -3,28 +3,28 @@ import axios from 'axios'
 
 function ChatBox() {
 
-    const [question,setQuestion] = useState('')
-    const [answer,setAnswer] = useState('')
+    const [question, setQuestion] = useState('')
+    const [answer, setAnswer] = useState('')
     const [loading, setLoading] = useState(false)
     const [source, setSource] = useState('')
 
     const askQuestion = async () => {
         if (!question.trim()) return
 
-        try{
+        try {
             setLoading(true)
 
             const response = await axios.post(
                 'http://127.0.0.1:8000/api/chat/',
                 {
-                    question:question
+                    question: question
                 }
             )
 
             setAnswer(response.data.answer)
             setSource(response.data.source_title || '')
 
-        }catch(error){
+        } catch (error) {
             console.log(error)
             const message = error?.response?.data?.error || 'Failed to get answer'
             setAnswer(message)
@@ -49,7 +49,7 @@ function ChatBox() {
                     rows="4"
                     placeholder="Ask question..."
                     value={question}
-                    onChange={(e)=>setQuestion(e.target.value)}
+                    onChange={(e) => setQuestion(e.target.value)}
                 />
 
                 <button type="submit" disabled={loading || !question.trim()}>

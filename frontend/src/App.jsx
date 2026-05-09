@@ -86,7 +86,7 @@ function App() {
                                 const video = videoPlayerRef.current
                                 if (!video) return
                                 video.currentTime = Number(seconds)
-                                video.play().catch(() => {})
+                                video.play().catch(() => { })
                             }}
                         />
                     </div>
